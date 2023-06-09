@@ -1,16 +1,16 @@
 # Genetic_rescue_simulations
 Code for simulations of genetic rescue under various conditions, for a future paper. The steps for these simulations are as follows:
 
-## Step 1: 
+## Step 1: Generate a non-neutral burn-in using tree-sequence recording in SLiM
 Generate initial burn-in of non-neutral mutations only, and output the resultant tree-sequence recording. Models are based on four different mammalian genomes ("Species" = Canine, Human, Mouse and Wallaby); three different (ancestral) population sizes ("AncestralSize" = 2000; 5000; 10000); and two different sets of non-neutral mutations ("MutModel"; deleterious only = "NoAdap", and deleterious + adaptive = "Shared"). These are output as:
   *{Species}\_K{AncestralSize}\_{MutModel}\_burnin.trees*.
-## Step 2:
+## Step 2: Recapitate the tree-sequence recording and add neutral mutations using pyslim
 Import each of these tree-sequence recordings into pyslim/msprime, and use recapitation to fill out the coalescent tree (see Kelleher et al. 20XX) and distribute neutral mutations according to a defined mutation rate and recombination map per species. This is repeated for each of the tree-sequence recordings. These are output as: *{Species}\_K{AncestralSize}\_{MutModel}\_final.trees*
-## Step 3:
+## Step 3: Import recapitated trees back into SLiM and simulate divergence and mixing, and calculate key genetic statistics
 Each of these recapitated and filled tree-sequence recordings is used as the input for further SLiMulations (to define the initial ancestral population). From this starting point, the ancestral population is divided into two populations (a "source" and "target" for genetic rescue) and allowed to diverge for a period of time (until the specific Fst threshold is hit). At this stage, a single migration event from the target to the source is enacted (as a one-off translocation) and then the simulation continues for ~20 generations, with relevant statistics of the target population calculated and exported. These are saved as: *{Species}\_K{AncestralSize}\_{MutModel}.csv*
-## Step 4:
+## Step 4: Summarise genetic statistics for each replicated simulation and across simulations
 Summaries of these statistics across simulations are then calculated using _R_, primarily using the dplyr package. Summaries are calculated _within_ replicates (_n_ = XXXX lines) as well as _across_ all replicates (_n_ = XXXX lines). Output statistics include mean heterozygosity, mean F<sub>ROH</sub>, mean masked load, mean &plusmn; std. dev. realised load. Mixing impact is measured as the maximum change in mean F<sub>ROH</sub> and mean realised load per replicate across the post-mixing time periods. These are summarised as $\Delta\$ Real and $\Delta\$ F<sub>ROH</sub>, respectively.
-## Step 5:
+## Step 5: Estimate variable importance across simulations using generalised linear models
 Generalised linear models (GLMs) are estimated for each set of simulations (i.e., for each combination of {Species} x {Ancestral Size} x {MutModel}), using $\Delta\$ Real and $\Delta\$ F<sub>ROH</sub> as response variables. Population sizes, degrees of divergence, the number of individuals translocated and all two-way interactions are initially included as predictors: a separate GLM is estimated afterwards retaining only significant variables. From each of the estimated GLMs, the variable importance of each predictor is estimated using the R<sup>2</sup> partitioned by average over orderings in the relaimpo _R_ package.
-## Step 6:
+## Step 6: Develop an interactive RShiny app to assess the suitability of potential source populations for genetic rescue using genetic and demographic information
 Based on the variable importances above and theory on the influence of variables on the outcome of genetic rescue, an interactive _RShiny_ app was developed. This takes, as input, a table where rows correspond to potential populations being considered as sources for genetic mixing and columns describing their population sizes, genetic diversity, genetic differentiation (compared to the target population) and any other available information on adaptive differentiation or reproductive isolation. Each variable is weighted according to its predicted effect on mixing, with weights readily adjustable within the app.
