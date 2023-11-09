@@ -1,4 +1,4 @@
-# Genetic_rescue_simulations
+# Prioritising populations as sources for genetic mixing: guidelines from a simulation framework
 Code for simulations of genetic rescue under various conditions, for a future paper. The steps for these simulations are as follows:
 
 ## Step 1: Generate a non-neutral burn-in using tree-sequence recording in SLiM
